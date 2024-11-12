@@ -38,7 +38,7 @@ fn main() {
         }
     };
 
-    let pokemon_url: String = format!("{}{}", URL.clone(), pokemon_id.to_string());
+    let pokemon_url: String = format!("{}{}", URL, pokemon_id.to_string());
 
     match fetch_pokemon(&pokemon_url) {
         Ok(pokemon) => {
