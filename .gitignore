@@ -1,0 +1,10 @@
+# Ignore all target directories in subprojects
+**/target/
+
+# Ignore other common build artifacts
+**/*.rs.bk
+**/*.log
+**/*.exe
+**/*.so
+**/*.dylib
+**/*.dll
