@@ -134,3 +134,14 @@ fn for_looping() {
         println!("{}", number);
     }
 }
+
+fn only_odd(x: i32) -> bool {
+    if x % 2 == 0 {
+        unreachable!("This should never happen");
+    }
+    return true;
+}
+
+fn only_evens(x: i32) -> bool {
+    todo!("Finish later");
+}
