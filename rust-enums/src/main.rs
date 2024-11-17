@@ -72,3 +72,10 @@ fn match_the_food(food: Food) -> String {
         Food::Waffle => String::from("Waffle"),
     };
 }
+
+fn plus_one(x: Option<i32>) -> Option<i32> {
+    return match x {
+        Some(num) => Some(num + 1),
+        _ => None,
+    };
+}
