@@ -1,24 +1,5 @@
-use std::f64::consts::PI;
 mod shapes;
-use shapes::{Circle, Rectangle};
-
-trait Area {
-    fn area(&self) -> f64 {
-        return 0.0;
-    }
-}
-
-impl Area for Rectangle<f64> {
-    fn area(&self) -> f64 {
-        return self.width * self.height;
-    }
-}
-
-impl Area for Circle<f64> {
-    fn area(&self) -> f64 {
-        return self.radius * self.radius * PI;
-    }
-}
+use shapes::{area::Area, circle::Circle, rectangle::Rectangle};
 
 fn main() {
     let rec: Rectangle<f64> = Rectangle {
@@ -26,7 +7,16 @@ fn main() {
         height: 5.5,
     };
 
-    println!("The area of the rectangle is {}cm^2", get_area(rec));
+    let cir: Circle<f64> = Circle {
+        radius: 4.4,
+        x: 3.3,
+        y: 3.3,
+    };
+
+    //println!("The area of the rectangle is {}cm^2", get_area(rec));
+    println!("{}", rec);
+    println!("The area of the circle is {}cm^2", get_area(cir));
+    println!("The area of the float is {}cm^2", get_area(6.9));
 }
 
 fn get_area(item: impl Area) -> f64 {
