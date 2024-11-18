@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::fmt::Display;
 
 fn make_a_hashmap<T: Ord + Copy, H: Ord + Copy>() -> HashMap<T, H> {
     let hashmap: HashMap<T, H> = HashMap::new();
@@ -52,4 +53,31 @@ impl Point<i32> {
     pub fn print_num(&self) {
         println!("{};{}", self.x, self.y);
     }
+}
+
+struct Rectangle<T: Display + Ord> {
+    width: T,
+    height: T,
+}
+
+impl<T: Display + Ord> Rectangle<T> {
+    pub fn print_rectangle(&self) {
+        println!(
+            "The rectangle has a width of {}cm and a height of {}cm",
+            self.width, self.height
+        );
+    }
+}
+
+impl Shape for Rectangle<u32> {
+    fn print_shape(&self) {}
+
+    fn area(&self) -> f32 {
+        return 5.5;
+    }
+}
+
+trait Shape {
+    fn print_shape(&self);
+    fn area(&self) -> f32;
 }
