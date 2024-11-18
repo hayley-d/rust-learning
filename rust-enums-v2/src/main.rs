@@ -1,3 +1,5 @@
+mod lib;
+
 enum Colours {
     Red,
     Green,
@@ -73,4 +75,18 @@ fn main() {
 
     let mut employees: Vec<Employee> = vec![];
     append(&mut employees);
+}
+
+fn multiply_five(x: Option<i32>) -> i32 {
+    return match x {
+        Some(x) => x * 5,
+        None => 0,
+    };
+}
+
+fn practice(nums: &Vec<usize>, index: usize) -> usize {
+    return match nums.get(index) {
+        Some(num) => num * 5,
+        None => index * 5,
+    };
 }
