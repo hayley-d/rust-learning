@@ -1,3 +1,31 @@
+use std::collections::HashMap;
+
+fn hashmaps() {
+    let mut blue: String = String::from("Blue");
+    let red: String = String::from("Red");
+
+    let mut scores: HashMap<String, u32> = HashMap::new();
+    scores.insert(blue, 10);
+    scores.insert(red, 11);
+
+    let blue_score: u32 = match scores.get("Blue") {
+        Some(i) => *i,
+        None => 0,
+    };
+
+    println!("The score of the blue team is {}", blue_score);
+
+    for (key, value) in &scores {
+        println!("Team {} has a score of {}", key, value);
+    }
+
+    scores.entry(String::from("Red")).or_insert(30);
+
+    let s = scores.entry("Yellow".to_string()).or_insert(0);
+    // you get a &mut so you can change the value in the hashmap
+    *s = 10;
+}
+
 enum SpredsheetCell {
     Int(i32),
     Float(f32),
@@ -34,4 +62,19 @@ fn main() {
         },
         None => println!("Not found"),
     }
+}
+
+fn strings() {
+    let mut s1: String = String::from("Hello world");
+    s1.push_str("!");
+
+    let s2: String = "hello worlds".to_string();
+
+    let s3: String = s1 + &s2;
+
+    let c: char = if let Some(c) = s1.chars().get(0) {
+        c
+    } else {
+        '\0'
+    };
 }
