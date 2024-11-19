@@ -8,6 +8,12 @@ pub struct Circle<T> {
     pub y: T,
 }
 
+impl Circle<f64> {
+    pub fn contains_point(&self, x: f64, y: f64) -> bool {
+        return (self.x, self.y) == (x, y);
+    }
+}
+
 impl Area for Circle<f64> {
     fn area(&self) -> f64 {
         return self.radius * self.radius * PI;

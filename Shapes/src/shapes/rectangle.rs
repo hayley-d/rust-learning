@@ -10,6 +10,15 @@ pub struct Rectangle<'a, T> {
     pub next: Option<&'a Rectangle<'a, T>>,
 }
 
+impl<'a> Rectangle<'a, f64> {
+    pub fn set_next(&mut self, other: Option<&'a Rectangle<'a, f64>>) {
+        self.next = other;
+    }
+
+    pub fn contains_point(&self, x: f64, y: f64) -> bool {
+        return (self.width, self.height) == (x, y);
+    }
+}
 impl<'a> Area for Rectangle<'a, f64> {
     fn area(&self) -> f64 {
         return self.width * self.height;
@@ -42,6 +51,18 @@ impl<'a> RectIter<'a> {
         return RectIter {
             current: start,
             index: 0,
+        };
+    }
+
+    pub fn has_next(&self) -> bool {
+        return match self.current {
+            Some(x) => {
+                return match x.next {
+                    Some(_) => true,
+                    None => false,
+                }
+            }
+            None => false,
         };
     }
 }
