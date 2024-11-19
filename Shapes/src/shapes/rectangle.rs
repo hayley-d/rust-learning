@@ -32,7 +32,7 @@ impl<'a> Display for Rectangle<'a, f64> {
     }
 }
 
-struct RectIter<'a> {
+pub struct RectIter<'a> {
     pub current: Option<&'a Rectangle<'a, f64>>,
     pub index: u32,
 }
@@ -51,10 +51,21 @@ impl<'a> Iterator for RectIter<'a> {
 
     fn next(&mut self) -> Option<Self::Item> {
         self.index += 1;
+        let curr = self.current;
         self.current = match self.current {
             Some(x) => x.next,
             None => None,
         };
-        return self.current;
+        return curr;
+    }
+}
+
+impl<'a> IntoIterator for Rectangle<'a, f64> {
+    type Item = &'a Rectangle<'a, f64>;
+
+    type IntoIter = RectIter<'a>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        return RectIter::new(self.next);
     }
 }
