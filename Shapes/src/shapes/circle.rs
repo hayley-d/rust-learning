@@ -2,25 +2,28 @@ use crate::shapes::area::Area;
 use std::f64::consts::PI;
 use std::fmt::Display;
 
-pub struct Circle<T> {
-    pub radius: T,
-    pub x: T,
-    pub y: T,
+pub struct Circle<'a> {
+    pub radius: f64,
+    pub x: f64,
+    pub y: f64,
+    pub next: Option<&'a Circle<'a>>,
 }
 
-impl Circle<f64> {
-    pub fn contains_point(&self, x: f64, y: f64) -> bool {
-        return (self.x, self.y) == (x, y);
+impl Circle<'_> {
+    pub fn contains_point(&self, (x, y): (f64, f64)) -> bool {
+        let x = self.x - x;
+        let y = self.y - y;
+        return (x * x + y * y) <= self.radius * self.radius;
     }
 }
 
-impl Area for Circle<f64> {
+impl Area for Circle<'_> {
     fn area(&self) -> f64 {
         return self.radius * self.radius * PI;
     }
 }
 
-impl Default for Circle<f64> {
+/*impl Default for Circle {
     fn default() -> Self {
         return Circle {
             radius: 5.5,
@@ -28,9 +31,9 @@ impl Default for Circle<f64> {
             y: 7.7,
         };
     }
-}
+}*/
 
-impl Display for Circle<f64> {
+impl Display for Circle<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         return write!(f, "Circle({})", self.radius);
     }

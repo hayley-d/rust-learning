@@ -1,7 +1,7 @@
 use super::circle::Circle;
 use super::rectangle::Rectangle;
 
-trait Collidable<T> {
+pub trait Collidable<T> {
     fn collide(&self, other: &T) -> bool;
 
     fn collides(&self, others: &[T]) -> bool {
@@ -14,14 +14,26 @@ trait Collidable<T> {
     }
 }
 
-impl Collidable for Rectangle<'a, T> {
-    fn collide(&self, other: &Rectangle<'_, f64>) -> bool {
-        return self.contains_point(other.width, other.height);
+impl<'a> Collidable<Rectangle<'a>> for Rectangle<'a> {
+    fn collide(&self, other: &Rectangle<'_>) -> bool {
+        return self.contains_point((other.x, other.y));
     }
 }
 
-impl Collidable for Circle<f64> {
-    fn collide(&self, other: &Circle<f64>) -> bool {
-        return other.contains_point(other.x, other.y);
+impl Collidable<Circle<'_>> for Circle<'_> {
+    fn collide(&self, other: &Circle) -> bool {
+        return other.contains_point((other.x, other.y));
+    }
+}
+
+impl<'a> Collidable<Circle<'a>> for Rectangle<'a> {
+    fn collide(&self, other: &Circle<'_>) -> bool {
+        return self.contains_point((other.x, other.y));
+    }
+}
+
+impl Collidable<Rectangle<'_>> for Circle<'_> {
+    fn collide(&self, other: &Rectangle) -> bool {
+        return other.contains_point((other.x, other.y));
     }
 }
