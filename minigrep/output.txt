@@ -1,0 +1,3 @@
+Searching for NORTH
+In file poem.txt
+But the Grinch,Who lived just north of Whoville, Did NOT!

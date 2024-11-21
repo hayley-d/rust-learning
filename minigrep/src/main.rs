@@ -9,13 +9,13 @@ fn main() {
     let query: Query = match Query::new(&args) {
         Ok(q) => q,
         Err(e) => {
-            println!("Error: {}", e);
+            eprintln!("Error: {}", e);
             process::exit(1);
         }
     };
 
     if let Err(e) = run(query) {
-        println!("Appliction Error: {}", e);
+        eprintln!("Appliction Error: {}", e);
         process::exit(1);
     }
 }
