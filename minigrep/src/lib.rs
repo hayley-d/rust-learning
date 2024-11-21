@@ -1,8 +1,6 @@
-use std::env;
 use std::error::Error;
 use std::fmt;
 use std::fs;
-use std::process;
 
 #[derive(Debug)]
 pub enum MyError {
@@ -22,20 +20,6 @@ impl fmt::Display for MyError {
         }
     }
 }
-
-fn main() {
-    // args returns an iterator over the arguemnts passed to the program through the command line
-    let args: Vec<String> = env::args().collect();
-
-    let query: Query = match Query::new(&args) {
-        Ok(q) => q,
-        Err(e) => {
-            println!("Error: {}", e);
-            process::exit(1);
-        }
-    };
-}
-
 pub fn run(query: Query) -> Result<(), Box<dyn Error>> {
     let contents: String = read_file_to_string(&query.file_name)?;
 
@@ -49,7 +33,7 @@ pub struct Query<'a> {
 }
 
 impl<'a> Query<'a> {
-    fn new(args: &Vec<String>) -> Result<Query, MyError> {
+    pub fn new(args: &Vec<String>) -> Result<Query, MyError> {
         let query: &str = match &args.get(1) {
             Some(v) => v,
             None => return Err(MyError::InvalidArgs),
