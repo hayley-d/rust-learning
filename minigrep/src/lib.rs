@@ -23,7 +23,12 @@ impl fmt::Display for MyError {
 pub fn run(query: Query) -> Result<(), Box<dyn Error>> {
     let contents: String = read_file_to_string(&query.file_name)?;
 
-    println!("The file contains: {}", &contents);
+    //println!("The file contains: {}", &contents);
+
+    for line in search(query.query, &contents) {
+        println!("{}", line);
+    }
+
     return Ok(());
 }
 
@@ -56,4 +61,54 @@ pub fn read_file_to_string(file_name: &str) -> Result<String, MyError> {
         Ok(s) => Ok(s),
         Err(_) => Err(MyError::InvalidFile),
     };
+}
+
+pub fn search<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
+    let mut results: Vec<&'a str> = Vec::new();
+
+    for line in content.lines() {
+        if line.contains(query) {
+            results.push(line);
+        }
+    }
+
+    return results;
+}
+
+pub fn search_case_insensitive<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
+    let mut results: Vec<&'a str> = Vec::new();
+
+    let query = query.to_lowercase();
+
+    for line in content.lines() {
+        if line.to_lowercase().contains(&query) {
+            results.push(line);
+        }
+    }
+
+    return results;
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn one_result() {
+        let query: &str = "duct";
+        let content: &str = "Rust\nsafe, fast, productive.\n Pick three.";
+
+        assert_eq!(vec!["safe, fast, productive."], search(query, content));
+    }
+
+    #[test]
+    fn case_insensitive() {
+        let query: &str = "rust";
+        let content: &str = "Rust\nsafe, fast, productive.\nPick three.\nTrust me.";
+
+        assert_eq!(
+            vec!["Rust", "Trust me."],
+            search_case_insensitive(query, content)
+        );
+    }
 }
