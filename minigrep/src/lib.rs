@@ -24,9 +24,14 @@ pub fn run(query: Query) -> Result<(), Box<dyn Error>> {
     let contents: String = read_file_to_string(&query.file_name)?;
 
     //println!("The file contains: {}", &contents);
-
-    for line in search(query.query, &contents) {
-        println!("{}", line);
+    if query.case_sensitive {
+        for line in search(query.query, &contents) {
+            println!("{}", line);
+        }
+    } else {
+        for line in search_case_insensitive(query.query, &contents) {
+            println!("{}", line);
+        }
     }
 
     return Ok(());
@@ -35,6 +40,7 @@ pub fn run(query: Query) -> Result<(), Box<dyn Error>> {
 pub struct Query<'a> {
     pub query: &'a str,
     pub file_name: &'a str,
+    pub case_sensitive: bool,
 }
 
 impl<'a> Query<'a> {
@@ -49,10 +55,22 @@ impl<'a> Query<'a> {
             None => return Err(MyError::InvalidArgs),
         };
 
+        let case_sensitive: bool = match &args.get(3) {
+            Some(v) => match v as &str {
+                "true" => true,
+                _ => false,
+            },
+            None => return Err(MyError::InvalidArgs),
+        };
+
         println!("Searching for {}", query);
         println!("In file {}", file_name);
 
-        return Ok(Query { query, file_name });
+        return Ok(Query {
+            query,
+            file_name,
+            case_sensitive,
+        });
     }
 }
 
