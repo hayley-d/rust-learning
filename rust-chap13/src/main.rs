@@ -82,3 +82,78 @@ fn generate_workout(intensity: u32, random_num: u32) {
         }
     }
 }
+
+/*pub trait Iterator {
+    type Item;
+
+    fn next(&mut self) -> Option<Self::Item>;
+}*/
+
+#[test]
+fn iterator_test() {
+    let v1: Vec<i32> = vec![1, 2, 3, 4, 5];
+
+    let mut v1_iter = v1.iter();
+
+    assert_eq!(v1_iter.next(), Some(&1));
+    assert_eq!(v1_iter.next(), Some(&2));
+    assert_eq!(v1_iter.next(), Some(&3));
+    assert_eq!(v1_iter.next(), Some(&4));
+    assert_eq!(v1_iter.next(), Some(&5));
+    assert_eq!(v1_iter.next(), None);
+}
+
+#[derive(PartialEq, Debug)]
+pub struct Shoe {
+    size: u32,
+    style: String,
+}
+
+fn shoes_in_my_size(shoes: Vec<Shoe>, shoe_size: u32) -> Vec<Shoe> {
+    return shoes.into_iter().filter(|s| s.size == shoe_size).collect();
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn shoe_size_test() {
+        let shoes: Vec<Shoe> = vec![
+            Shoe {
+                size: 10,
+                style: String::from("sneaker"),
+            },
+            Shoe {
+                size: 4,
+                style: String::from("boot"),
+            },
+            Shoe {
+                size: 6,
+                style: String::from("crocs"),
+            },
+            Shoe {
+                size: 6,
+                style: String::from("heel"),
+            },
+            Shoe {
+                size: 8,
+                style: String::from("slipper"),
+            },
+        ];
+
+        assert_eq!(
+            shoes_in_my_size(shoes, 6),
+            vec![
+                Shoe {
+                    size: 6,
+                    style: String::from("crocs"),
+                },
+                Shoe {
+                    size: 6,
+                    style: String::from("heel"),
+                }
+            ]
+        );
+    }
+}
