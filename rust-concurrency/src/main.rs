@@ -1,3 +1,5 @@
+// multiple producer single consumer
+use std::sync::mpsc::{self, Receiver, Sender};
 use std::thread::{self, JoinHandle};
 use std::time::Duration;
 
@@ -33,4 +35,90 @@ fn main() {
         Ok(p) => p,
         Err(e) => eprintln!("There was an error with thread 2: {:?}", e),
     };
+
+    // create a channel
+    let (sender, reciever): (Sender<String>, Receiver<String>) = mpsc::channel::<String>();
+    // this clone gives us another sender linked to the same reciever
+    let sender_2: Sender<String> = sender.clone();
+
+    // cannot share the sender between threads so we need to use move here
+    let thread_3 = thread::spawn(move || {
+        let msg: String = String::from("Hi, I like sloths");
+
+        match sender.send(msg) {
+            Ok(m) => m,
+            Err(e) => eprintln!("Error: {:?}", e),
+        };
+
+        let msgs = vec![
+            String::from("The"),
+            String::from("Grinch"),
+            String::from("is"),
+            String::from("one of the best christmas films"),
+        ];
+
+        for m in msgs {
+            match sender.send(m) {
+                Ok(m) => m,
+                Err(e) => eprintln!("Error: {:?}", e),
+            };
+            thread::sleep(Duration::from_millis(5));
+        }
+    });
+
+    let thread_4 = thread::spawn(move || {
+        let msg: String = String::from("Hi, I like pugs");
+
+        match sender_2.send(msg) {
+            Ok(m) => m,
+            Err(e) => eprintln!("Error: {:?}", e),
+        };
+
+        let msgs = vec![
+            String::from("rust"),
+            String::from("c++"),
+            String::from("go"),
+            String::from("zig"),
+        ];
+
+        for m in msgs {
+            match sender_2.send(m) {
+                Ok(m) => m,
+                Err(e) => eprintln!("Error: {:?}", e),
+            };
+            thread::sleep(Duration::from_millis(3));
+        }
+    });
+
+    // recv blocks the current threads execution (so here we are in the main thread) until a
+    // message has been recieved
+    //
+    // try_recv does not block if there is a message it will return otherwise it returs an err()
+    let try_recv = match reciever.try_recv() {
+        Ok(_) => true,
+        Err(_) => false,
+    };
+
+    /*while try_recv {
+        let received_msg = match reciever.recv() {
+            Ok(msg) => msg,
+            Err(e) => panic!("Error: {:?}", e),
+        };
+
+        println!("Message Recieved: {}", received_msg);
+
+        let try_recv = match reciever.try_recv() {
+            Ok(_) => true,
+            Err(_) => false,
+        };
+    }
+
+    match thread_3.join() {
+        Ok(p) => p,
+        Err(e) => eprintln!("There was an error with thread 2: {:?}", e),
+    };*/
+
+    for msg in reciever {
+        println!("Message Recieved: {}", msg);
+    }
 }
