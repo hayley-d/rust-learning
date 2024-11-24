@@ -3,7 +3,7 @@ use std::ops::{Deref, DerefMut};
 use std::rc::{Rc, Weak};
 
 #[derive(Debug)]
-struct Node {
+pub struct Node {
     pub value: i32,
     pub left: Option<Rc<RefCell<Node>>>,
     pub right: Option<Rc<RefCell<Node>>>,
