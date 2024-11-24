@@ -1,5 +1,6 @@
 // multiple producer single consumer
 use std::sync::mpsc::{self, Receiver, Sender};
+use std::sync::{Arc, Mutex, MutexGuard};
 use std::thread::{self, JoinHandle};
 use std::time::Duration;
 
@@ -121,4 +122,24 @@ fn main() {
     for msg in reciever {
         println!("Message Recieved: {}", msg);
     }
+
+    let my_mutex: Arc<Mutex<i32>> = Arc::new(Mutex::new(0));
+
+    let mut my_theads: Vec<JoinHandle<()>> = Vec::new();
+
+    for i in 0..10 {
+        let mutex = Arc::clone(&my_mutex);
+        my_theads.push(thread::spawn(move || {
+            let mut num = mutex.lock().unwrap();
+            *num += 1;
+        }));
+    }
+
+    for thread in my_theads {
+        thread.join().unwrap();
+    }
+
+    let mutex = Arc::clone(&my_mutex);
+
+    println!("The value in the mutex is {:?}", mutex);
 }
